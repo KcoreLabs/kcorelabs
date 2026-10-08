@@ -1,0 +1,50 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+export async function getStaticPaths() {
+  return (await getCollection("work", ({ data }) => data.published)).map(
+    (project) => ({ params: { slug: project.id }, props: { project } }),
+  );
+}
+interface Props {
+  project: CollectionEntry<"work">;
+}
+const { data: p } = Astro.props.project;
+---
+
+<Layout title={p.title} description={p.summary}
+  ><article class="wrap">
+    <header class="page-intro">
+      <p class="eyebrow">{p.year} / {p.status}</p><h1>{p.title}</h1><p>
+        {p.summary}
+      </p>
+    </header><div class="reading">
+      <p>{p.client} · {p.services.join(" / ")}</p><h2>My contribution</h2><p>
+        {p.contribution}
+      </p><h2>The starting point</h2><p>{p.problem}</p><h2>
+        The requirements
+      </h2><ul>{p.requirements.map((r) => <li>{r}</li>)}</ul><h2>
+        The approach
+      </h2><p>{p.approach}</p><h2>The delivered result</h2><p>{p.result}</p>
+    </div>{
+      p.media.map((m) => (
+        <figure>
+          <>
+            <img
+              class="case-media"
+              src={m.src}
+              alt={m.alt}
+              width={m.width}
+              height={m.height}
+              loading="lazy"
+            />
+            <figcaption>{m.caption}</figcaption>
+          </>
+        </figure>
+      ))
+    }<div class="reading">
+      <a class="button" href={p.cta?.href ?? "/contact/"}
+        >{p.cta?.label ?? "Discuss a similar project"} ↗</a>
+    </div>
+  </article></Layout
+>

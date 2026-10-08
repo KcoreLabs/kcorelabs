@@ -1,0 +1,37 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Closing from "../components/Closing.astro";
+import KMark from "../components/KMark.astro";
+import { copy, site } from "../config";
+---
+
+<Layout title="About the studio" description={copy.about.paragraphs[0]}
+  ><div class="wrap">
+    <header class="page-intro">
+      <p class="eyebrow">Independent by design</p><h1>{copy.about.title}</h1>
+    </header><section class="studio section" style="padding-top:0">
+      <div class="studio-art"><KMark large /></div><div>
+        {copy.about.paragraphs.map((p) => <p>{p}</p>)}{
+          site.founder && (
+            <>
+              <p>{site.founder.bio}</p>
+              {site.founder.portrait && (
+                <img
+                  src={site.founder.portrait}
+                  alt={site.founder.name}
+                  width="400"
+                  height="400"
+                  loading="lazy"
+                />
+              )}
+            </>
+          )
+        }
+      </div>
+    </section><section class="reading">
+      <p class="eyebrow">Working principles</p><ul class="principles">
+        {copy.about.principles.map((p) => <li>{p}</li>)}
+      </ul>
+    </section>
+  </div><Closing /></Layout
+>

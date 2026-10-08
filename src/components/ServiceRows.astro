@@ -1,0 +1,20 @@
+---
+import { enabledServices } from "../config";
+---
+
+<div class="service-rows">
+  {
+    enabledServices.map((s, i) => (
+      <a class="service-row" href={`/services/#${s.id}`}>
+        <>
+          <span class="number">0{i + 1}</span>
+          <h3>{s.title}</h3>
+          <p>{s.short}</p>
+          <span class="row-arrow" aria-hidden="true">
+            ↗
+          </span>
+        </>
+      </a>
+    ))
+  }
+</div>

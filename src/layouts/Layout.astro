@@ -1,0 +1,116 @@
+---
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/space-grotesk/500.css";
+import "../styles/global.css";
+import KMark from "../components/KMark.astro";
+import { site } from "../config";
+interface Props {
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+const { title, description, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url);
+---
+
+<!doctype html>
+<html lang="en">
+  <head
+    ><meta charset="utf-8" /><meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    /><title>{title} | {site.name}</title><meta
+      name="description"
+      content={description}
+    /><link rel="canonical" href={canonical} /><link
+      rel="icon"
+      href="/favicon.svg"
+      type="image/svg+xml"
+    /><meta name="theme-color" content="#08111F" /><meta
+      property="og:title"
+      content={`${title} | ${site.name}`}
+    /><meta property="og:description" content={description} /><meta
+      property="og:type"
+      content="website"
+    /><meta property="og:url" content={canonical} /><meta
+      property="og:image"
+      content={`${site.url}/social.png`}
+    /><meta name="twitter:card" content="summary_large_image" />{
+      noindex && <meta name="robots" content="noindex, follow" />
+    }<script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: site.name,
+        url: site.url,
+        logo: `${site.url}/favicon.svg`,
+      })}
+    /></head
+  >
+  <body
+    ><a class="skip" href="#main">Skip to content</a><header
+      class="header wrap"
+    >
+      <a class="brand" href="/" aria-label="Kcore Labs home"
+        ><KMark /><span>Kcore Labs<span class="brand-dot">.</span></span></a
+      ><button
+        class="menu-toggle"
+        aria-controls="navigation"
+        aria-expanded="false"
+        hidden>Menu <span aria-hidden="true">＋</span></button
+      ><nav id="navigation" aria-label="Main navigation">
+        {
+          [
+            ["Services", "/services/"],
+            ["Work", "/work/"],
+            ["About", "/about/"],
+          ].map(([label, url]) => (
+            <a
+              href={url}
+              aria-current={
+                Astro.url.pathname.startsWith(url) ? "page" : undefined
+              }
+            >
+              {label}
+            </a>
+          ))
+        }<a class="nav-cta" href="/contact/" data-cta="header"
+          >Start a project <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header><main id="main"><slot /></main><footer class="wrap footer">
+      <div class="footer-top">
+        <a class="brand" href="/"><KMark />Kcore Labs.</a><p>
+          {site.tagline}
+        </p><a href="/contact/">Let’s make it happen ↗</a>
+      </div><div class="footer-bottom">
+        <span>© {new Date().getFullYear()} {site.name}</span><span
+          >Independent by design. Based in India.</span
+        ><a href="/privacy/">Privacy</a>
+      </div>
+    </footer>
+    <script>
+      const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
+      const nav = document.querySelector<HTMLElement>("#navigation");
+      if (toggle && nav) {
+        toggle.hidden = false;
+        document.documentElement.classList.add("js");
+        toggle.addEventListener("click", () => {
+          const open = toggle.getAttribute("aria-expanded") !== "true";
+          toggle.setAttribute("aria-expanded", String(open));
+          nav.classList.toggle("open", open);
+        });
+        document.addEventListener("keydown", (e) => {
+          if (
+            e.key === "Escape" &&
+            toggle.getAttribute("aria-expanded") === "true"
+          ) {
+            toggle.setAttribute("aria-expanded", "false");
+            nav.classList.remove("open");
+            toggle.focus();
+          }
+        });
+      }
+    </script></body>
+</html>

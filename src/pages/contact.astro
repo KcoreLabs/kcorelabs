@@ -1,0 +1,212 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { copy, enabledServices, site } from "../config";
+const key = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+const fields = [
+  ["name", "Name", "text", true, 100],
+  ["email", "Email", "email", true, 254],
+  ["business", "Business / organisation", "text", false, 160],
+  ["website", "Current website", "url", false, 500],
+] as const;
+---
+
+<Layout title="Start a project" description={copy.contact.intro}
+  ><div class="wrap">
+    <header class="page-intro">
+      <p class="eyebrow">A conversation is a good start</p><h1>
+        {copy.contact.title}
+      </h1><p>{copy.contact.intro}</p>
+    </header><div class="contact-layout">
+      <aside>
+        <h2>What happens next?</h2><p>{copy.contact.next}</p>{
+          site.email && (
+            <p>
+              <a href={`mailto:${site.email}`}>{site.email}</a>
+            </p>
+          )
+        }{
+          site.whatsapp && (
+            <p>
+              <a href={`https://wa.me/${site.whatsapp}`}>
+                Enquire on WhatsApp ↗
+              </a>
+            </p>
+          )
+        }
+      </aside><form id="contact-form" action="/api/contact" method="post">
+        {
+          fields.map(([name, label, type, required, max]) => (
+            <div>
+              <>
+                <label for={name}>
+                  {label} {!required && <span>(optional)</span>}
+                </label>
+                <input
+                  id={name}
+                  name={name}
+                  type={type}
+                  required={required}
+                  maxlength={max}
+                  autocomplete={
+                    name === "name"
+                      ? "name"
+                      : name === "email"
+                        ? "email"
+                        : name === "business"
+                          ? "organization"
+                          : "url"
+                  }
+                  aria-describedby={`${name}-error`}
+                />
+                <span class="field-error" id={`${name}-error`} />
+              </>
+            </div>
+          ))
+        }<div class="full">
+          <label for="projectType">Project type</label><select
+            name="projectType"
+            id="projectType"
+            required
+            aria-describedby="projectType-error"
+            ><option value="">Select a project type</option>{
+              enabledServices.map((s) => (
+                <option value={s.id}>{s.title}</option>
+              ))
+            }<option value="unsure">Not sure yet</option></select
+          ><span class="field-error" id="projectType-error"></span>
+        </div><div class="full">
+          <label for="description">Project description</label><p
+            class="form-note"
+            id="description-hint"
+          >
+            What do you need, who is it for, and what would a successful outcome
+            look like?
+          </p><textarea
+            name="description"
+            id="description"
+            required
+            minlength="20"
+            maxlength="5000"
+            aria-describedby="description-hint description-error"
+          ></textarea><span class="field-error" id="description-error"></span>
+        </div><div>
+          <label for="budget">Budget and currency <span>(optional)</span></label
+          ><input
+            name="budget"
+            id="budget"
+            maxlength="100"
+            placeholder="e.g. INR 50,000 / Not sure yet"
+            aria-describedby="budget-error"
+          /><span class="field-error" id="budget-error"></span>
+        </div><div>
+          <label for="timing">Preferred timing <span>(optional)</span></label
+          ><input
+            name="timing"
+            id="timing"
+            maxlength="160"
+            aria-describedby="timing-error"
+          /><span class="field-error" id="timing-error"></span>
+        </div><div class="trap" aria-hidden="true">
+          <label for="company_url">Leave this field empty</label><input
+            name="company_url"
+            id="company_url"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>{
+          key && (
+            <div
+              class="full cf-turnstile"
+              data-sitekey={key}
+              data-action="contact"
+            />
+          )
+        }<p class="full form-note">
+          Your details will be used to respond to this enquiry. Read the <a
+            href="/privacy/">Privacy Policy</a
+          >.
+        </p><div
+          class="full notice"
+          id="form-status"
+          role="status"
+          aria-live="polite"
+          tabindex="-1"
+        >
+        </div><div class="full">
+          <button class="button" type="submit"
+            >Send project enquiry <span aria-hidden="true">↗</span></button>
+        </div><noscript
+          ><p class="full form-note">
+            The form works without JavaScript; if validation fails, return here
+            to correct your entries.
+          </p></noscript>
+      </form>
+    </div>
+  </div>{
+    key && (
+      <script
+        is:inline
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        async
+        defer
+      />
+    )
+  }<script>
+    const form = document.querySelector<HTMLFormElement>("#contact-form")!;
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const button = form.querySelector<HTMLButtonElement>(
+        "button[type=submit]",
+      )!;
+      if (button.disabled) return;
+      button.disabled = true;
+      const status = document.querySelector<HTMLElement>("#form-status")!;
+      status.textContent = "Sending your enquiry…";
+      form
+        .querySelectorAll("[aria-invalid]")
+        .forEach((el) => el.removeAttribute("aria-invalid"));
+      form
+        .querySelectorAll(".field-error")
+        .forEach((el) => (el.textContent = ""));
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          for (const [name, message] of Object.entries(result.errors ?? {})) {
+            const field = form.elements.namedItem(name);
+            if (field instanceof HTMLElement) {
+              field.setAttribute("aria-invalid", "true");
+              const error = document.getElementById(`${name}-error`);
+              if (error) error.textContent = String(message);
+            }
+          }
+          throw new Error(
+            result.message ??
+              "The enquiry could not be sent. Please try again.",
+          );
+        }
+        if (result.local) {
+          status.textContent = "Local test accepted. No email was sent.";
+        } else {
+          window.location.assign("/thank-you/");
+        }
+      } catch (error) {
+        status.textContent =
+          error instanceof Error
+            ? error.message
+            : "Connection failed. Your entries have been kept; please try again.";
+        status.focus();
+      } finally {
+        button.disabled = false;
+        const turnstile = (
+          window as unknown as { turnstile?: { reset: () => void } }
+        ).turnstile;
+        turnstile?.reset();
+      }
+    });
+  </script></Layout
+>

@@ -1,0 +1,67 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../config";
+---
+
+<Layout
+  title="Privacy"
+  description="How Kcore Labs handles website enquiries."
+  noindex={!site.privacy.approved}
+  ><article class="wrap">
+    <header class="page-intro">
+      <p class="eyebrow">Your information</p><h1>Privacy policy.</h1>
+    </header><div class="reading">
+      {
+        !site.privacy.approved && (
+          <p class="notice">
+            Draft for review. Please review the processor arrangements and
+            retention process before public launch.
+          </p>
+        )
+      }<h2>Who is responsible</h2><p>
+        {
+          site.privacy.controller ||
+            "Kcore Labs operates this website. The legal operator details are pending confirmation."
+        }
+      </p><h2>What is collected and why</h2><p>
+        The enquiry form collects your name, email, project type and
+        description, along with any business name, website, budget and timing
+        you choose to provide. These details are used to respond to your enquiry
+        and discuss a potential project.
+      </p><h2>Hosting, delivery and spam protection</h2><p>
+        Cloudflare serves the site and processes technical request information,
+        including IP addresses, for security and rate limiting. When enabled,
+        Cloudflare Turnstile checks whether a form submission is legitimate.
+        Configured enquiry delivery uses Resend to send the enquiry to the
+        studio’s Google Gmail inbox. These providers may process information in
+        other countries under their applicable service terms. Routine
+        application logs do not include form contents.
+      </p><h2>Retention</h2><p>
+        {
+          site.privacy.retention ||
+            "The enquiry and email retention period is awaiting confirmation before launch."
+        }
+      </p><h2>Tracking</h2><p>
+        No analytics or advertising tracking is enabled. Fonts are served by
+        this website. If analytics are added, this policy and any necessary
+        consent controls must be updated first.
+      </p><h2>Your choices and contact</h2><p>
+        You may request access to, correction of, or deletion of information
+        supplied in an enquiry, subject to applicable requirements.
+      </p>{
+        site.privacy.contact ? (
+          <p>
+            Contact:{" "}
+            <a href={`mailto:${site.privacy.contact}`}>
+              {site.privacy.contact}
+            </a>
+          </p>
+        ) : (
+          <p>
+            The privacy contact address is awaiting confirmation before launch.
+          </p>
+        )
+      }<p>This draft has not been legally reviewed.</p>
+    </div>
+  </article></Layout
+>

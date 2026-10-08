@@ -1,0 +1,33 @@
+{
+  "name": "kcorelabs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro build",
+    "check": "astro check && tsc --noEmit -p tsconfig.worker.json",
+    "preview": "wrangler dev",
+    "test": "tsx --test tests/*.test.ts",
+    "deploy": "tsx scripts/launch-check.ts && npm run check && npm run build && wrangler deploy",
+    "test:e2e": "node scripts/qa.mjs"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
+    "astro": "^7.3.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.64.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^0.14.1",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.148.0"
+  },
+  "overrides": {
+    "sharp": "^0.35.5"
+  }
+}

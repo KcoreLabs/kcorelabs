@@ -1,0 +1,99 @@
+---
+import Layout from "../layouts/Layout.astro";
+import KMark from "../components/KMark.astro";
+import Closing from "../components/Closing.astro";
+import ServiceRows from "../components/ServiceRows.astro";
+import { copy, process } from "../config";
+import { getCollection } from "astro:content";
+const projects = await getCollection("work", ({ data }) => data.published);
+---
+
+<Layout title="Ideas into digital reality" description={copy.hero.description}>
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <p class="eyebrow">
+        <span class="status-dot"></span>{copy.hero.eyebrow}
+      </p><h1>Ideas into<br />digital <span>reality.</span></h1><p
+        class="hero-description"
+      >
+        {copy.hero.description}
+      </p><div class="actions">
+        <a class="button" href="/contact/" data-cta="hero"
+          >Start a project <span aria-hidden="true">↗</span></a
+        ><a class="text-link" href={projects.length ? "/work/" : "/services/"}
+          >{projects.length ? "View selected work" : "Explore services"}
+          <span aria-hidden="true">↗</span></a>
+      </div>
+    </div><div class="hero-art">
+      <div class="art-label">
+        <span>FORM / FUNCTION</span><span>001</span>
+      </div><div class="art-grid"><KMark large /></div><div class="art-caption">
+        <span>Built with intention.</span><span aria-hidden="true"
+          >+ &nbsp; + &nbsp; +</span>
+      </div>
+    </div><div class="hero-bottom">
+      <span>Thoughtful design. Useful technology.</span><a href="#services"
+        >Discover the studio <span aria-hidden="true">↓</span></a>
+    </div>
+  </section>
+  {
+    projects.length > 0 && (
+      <section class="wrap section">
+        <h2>A closer look at the work.</h2>
+        {projects.slice(0, 2).map((p) => (
+          <a class="project" href={`/work/${p.id}/`}>
+            <h3>{p.data.title}</h3>
+            <p>{p.data.summary}</p>
+          </a>
+        ))}
+      </section>
+    )
+  }
+  <section class="light-section" id="services">
+    <div class="wrap section">
+      <div class="section-heading">
+        <span class="eyebrow">01 / What I do</span><h2>
+          {copy.services.heading}
+        </h2>
+      </div><ServiceRows />
+    </div>
+  </section>
+  <section class="wrap section process">
+    <div>
+      <p class="eyebrow">02 / How it comes together</p><h2>
+        Good work starts with understanding.
+      </h2><p class="muted">
+        A clear path from the first conversation to the final details.
+      </p>
+    </div><ol>
+      {
+        process.map(([title, description], i) => (
+          <li>
+            <>
+              <span class="number">0{i + 1}</span>
+              <div>
+                <>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </>
+              </div>
+            </>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+  <section class="studio-section">
+    <div class="wrap section studio">
+      <div class="studio-art">
+        <KMark large /><span
+          >INDEPENDENT IN SPIRIT.<br />CONSIDERED IN EVERY DETAIL.</span>
+      </div><div>
+        <p class="eyebrow">03 / The studio</p><h2>{copy.studio.heading}</h2><p>
+          {copy.studio.intro}
+        </p><a class="text-link" href="/about/"
+          >About Kcore Labs <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section><Closing />
+</Layout>

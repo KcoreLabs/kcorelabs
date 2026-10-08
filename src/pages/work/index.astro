@@ -1,0 +1,44 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Closing from "../../components/Closing.astro";
+import { copy } from "../../config";
+import { getCollection } from "astro:content";
+const projects = await getCollection("work", ({ data }) => data.published);
+---
+
+<Layout title="Selected work" description={copy.work.intro}
+  ><div class="wrap">
+    <header class="page-intro">
+      <p class="eyebrow">Considered from start to finish</p><h1>
+        {copy.work.title}
+      </h1><p>{copy.work.intro}</p>
+    </header>{
+      projects.length ? (
+        projects.map((p) => (
+          <a class="project" href={`/work/${p.id}/`}>
+            <>
+              <h2>{p.data.title}</h2>
+              <p>{p.data.summary}</p>
+            </>
+          </a>
+        ))
+      ) : (
+        <div class="empty-state">
+          <>
+            <p>{copy.work.empty}</p>
+            <div class="actions">
+              <>
+                <a class="button" href="/services/">
+                  Explore services ↗
+                </a>
+                <a class="text-link" href="/contact/">
+                  Get in touch ↗
+                </a>
+              </>
+            </div>
+          </>
+        </div>
+      )
+    }
+  </div><Closing /></Layout
+>
