@@ -77,6 +77,11 @@ export const process = [
     "Check the details, publish, and explain ongoing responsibilities.",
   ],
 ];
+export const clientProjects = [
+  { id: 'libertaz', name: 'Libertaz Global', category: 'Training & consulting', url: 'https://libertazglobal.com/', description: 'Professional certification programmes and corporate training, brought together online.', credit: '' },
+  { id: 'urban', name: 'Urban Watches', category: 'Watches', url: 'https://urban-watches.kcorelabs.workers.dev/', description: 'An active client project for Urban Watches.', credit: '' },
+  { id: 'bellish', name: 'Bellish', category: 'Leather goods · Online store', url: 'https://www.bellish.in/', description: 'An online shop for leather bags, wallets, and jackets.', credit: 'Project led by Mohammed Midlaj, with a contribution from Ribas.' },
+];
 export const copy = {
   hero: {
     eyebrow: "Independent digital studio · Based in India",
@@ -94,12 +99,13 @@ export const copy = {
   studio: {
     heading: "An independent studio. A direct working relationship.",
     intro:
-      "You work directly with the person designing and building your project, keeping communication clear from the first conversation to handover.",
+      "Work directly with Mohammed Midlaj and a small team, keeping communication clear from the first conversation to handover.",
   },
   about: {
     title: "Thoughtful digital work. Direct collaboration.",
     paragraphs: [
       "Kcore Labs is an independent digital studio based in India, working with businesses locally and internationally.",
+      "Led by Mohammed Midlaj, the studio brings together a small team, including Ribas, to shape and build client projects. You stay close to the people doing the work.",
       "Good digital work starts with understanding the people using it and the business behind it. That means asking useful questions, making deliberate choices, and keeping the project focused on what matters.",
     ],
     principles: [
@@ -112,7 +118,7 @@ export const copy = {
   work: {
     title: "Selected work.",
     intro:
-      "A look at the problems, decisions, and details behind projects by Kcore Labs.",
+      "A selection of active client projects, from training and consulting to retail.",
     empty:
       "Project stories are being prepared. In the meantime, explore the services or get in touch about what you’re planning.",
   },

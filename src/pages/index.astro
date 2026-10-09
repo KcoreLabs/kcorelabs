@@ -3,9 +3,11 @@ import Layout from "../layouts/Layout.astro";
 import KMark from "../components/KMark.astro";
 import Closing from "../components/Closing.astro";
 import ServiceRows from "../components/ServiceRows.astro";
-import { copy, process } from "../config";
+import ClientProjects from "../components/ClientProjects.astro";
+import { copy, process, clientProjects } from "../config";
 import { getCollection } from "astro:content";
 const projects = await getCollection("work", ({ data }) => data.published);
+const hasWork = projects.length > 0 || clientProjects.length > 0;
 ---
 
 <Layout title="Ideas into digital reality" description={copy.hero.description}>
@@ -20,8 +22,8 @@ const projects = await getCollection("work", ({ data }) => data.published);
       </p><div class="actions">
         <a class="button" href="/contact/" data-cta="hero"
           >Start a project <span aria-hidden="true">↗</span></a
-        ><a class="text-link" href={projects.length ? "/work/" : "/services/"}
-          >{projects.length ? "View selected work" : "Explore services"}
+        ><a class="text-link" href={hasWork ? "/work/" : "/services/"}
+          >{hasWork ? "View selected work" : "Explore services"}
           <span aria-hidden="true">↗</span></a>
       </div>
     </div><div class="hero-art">
@@ -35,6 +37,10 @@ const projects = await getCollection("work", ({ data }) => data.published);
       <span>Thoughtful design. Useful technology.</span><a href="#services"
         >Discover the studio <span aria-hidden="true">↓</span></a>
     </div>
+  </section>
+  <section class="wrap section" aria-labelledby="selected-work-heading">
+    <div class="section-heading"><p class="eyebrow">Selected work / Active clients</p><h2 id="selected-work-heading">A closer look at the work.</h2></div>
+    <ClientProjects />
   </section>
   {
     projects.length > 0 && (

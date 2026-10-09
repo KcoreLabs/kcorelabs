@@ -1,7 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Closing from "../../components/Closing.astro";
-import { copy } from "../../config";
+import ClientProjects from "../../components/ClientProjects.astro";
+import { copy, clientProjects } from "../../config";
 import { getCollection } from "astro:content";
 const projects = await getCollection("work", ({ data }) => data.published);
 ---
@@ -12,7 +13,7 @@ const projects = await getCollection("work", ({ data }) => data.published);
       <p class="eyebrow">Considered from start to finish</p><h1>
         {copy.work.title}
       </h1><p>{copy.work.intro}</p>
-    </header>{
+    </header><ClientProjects />{
       projects.length ? (
         projects.map((p) => (
           <a class="project" href={`/work/${p.id}/`}>
@@ -22,7 +23,7 @@ const projects = await getCollection("work", ({ data }) => data.published);
             </>
           </a>
         ))
-      ) : (
+      ) : clientProjects.length === 0 && (
         <div class="empty-state">
           <>
             <p>{copy.work.empty}</p>
