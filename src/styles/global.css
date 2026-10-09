@@ -824,11 +824,11 @@ figcaption {
 }
 .client-projects { display:grid; grid-template-columns:1fr 1fr; gap:64px 36px; padding-bottom:64px; }
 .client-project:first-child { grid-column:1/-1; }
-.client-cover { min-height:300px; padding:28px; display:flex; flex-direction:column; justify-content:space-between; background:#dce7ed; color:#142f43; overflow:hidden; }
+.client-cover { --cover-text:#142f43; min-height:300px; padding:28px; display:flex; flex-direction:column; justify-content:space-between; background:#dce7ed; color:var(--cover-text); overflow:hidden; }
 .client-project:first-child .client-cover { min-height:390px; }
-.client-urban .client-cover { background:#202d39; color:#e5d6b8; }
-.client-bellish .client-cover { background:#e8ded0; color:#483525; }
-.client-cover:hover { color:inherit; outline:1px solid var(--sky); outline-offset:5px; }
+.client-urban .client-cover { --cover-text:#e5d6b8; background:#202d39; }
+.client-bellish .client-cover { --cover-text:#483525; background:#e8ded0; }
+.client-cover:hover, .client-cover:focus-visible { color:var(--cover-text); outline:2px solid var(--sky); outline-offset:5px; }
 .client-cover-top { display:flex; justify-content:space-between; font-size:10px; letter-spacing:.16em; }
 .client-cover-top>span:last-child { font-size:24px; }
 .client-cover-name { font:500 clamp(40px,6vw,86px)/1.05 var(--heading); letter-spacing:-.05em; max-width:700px; padding-block:36px; }
